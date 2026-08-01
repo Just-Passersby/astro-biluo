@@ -1,7 +1,7 @@
 {
   "name": "biluo",
   "type": "module",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "碧落 Biluo — 注重效能與排版的 Astro 部落格主題（zh-Hant）。A clean, performance-focused Astro blog theme.",
   "license": "MIT",
