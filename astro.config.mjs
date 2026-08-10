@@ -42,7 +42,7 @@ for (const file of readdirSync(BLOG_DIR)) {
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com', // ← 換成你的網站正式網址（影響 canonical / sitemap / RSS / OG 絕對連結）
+	site: 'https://sofiagomezsanchez6-estrellas.github.io', // ← 換成你的網站正式網址（影響 canonical / sitemap / RSS / OG 絕對連結）
 	integrations: [
 		mdx(),
 		sitemap({
