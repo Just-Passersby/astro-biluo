@@ -161,8 +161,10 @@ facets. (A demo post walks through this.)
 
 - **Remark → Sätteri.** The Markdown pipeline currently runs on Remark (via
   `processor: unified({...})` in `astro.config.mjs`). The plan is to switch it to
-  **Sätteri** once that project reaches a **stable release** and its surrounding
-  packages mature. The switch will only
+  [**Sätteri**](https://github.com/bruits/satteri) — a Markdown/MDX processor
+  that parses and compiles in Rust while running plugins in JavaScript, built on
+  the same unified (Remark/Rehype) ecosystem — once it reaches a **stable
+  release** and its surrounding packages mature. The switch will only
   land once Sätteri is stable *and* every feature the current pipeline provides
   is verifiably reproduced on it, with no regression — until then, Remark stays.
 

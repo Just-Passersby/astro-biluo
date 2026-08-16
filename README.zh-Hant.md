@@ -144,9 +144,11 @@ wrangler.jsonc        # Cloudflare Workers Static Assets 部署設定
 ## 藍圖（Roadmap）
 
 - **Remark → Sätteri。** Markdown 管線目前跑在 Remark 上（透過
-  `astro.config.mjs` 的 `processor: unified({...})`）。計畫是待 **Sätteri** 推出
-  **正式版**、周邊套件成熟後，將其替換過去。替換只會在 Sätteri 已是正式版**且**
-  現有管線的每一項功能都能在其上
+  `astro.config.mjs` 的 `processor: unified({...})`）。計畫是待
+  [**Sätteri**](https://github.com/bruits/satteri)——一個以 Rust 解析與編譯、外掛
+  仍跑在 JavaScript，並建立在相同 unified（Remark/Rehype）生態上的 Markdown/MDX
+  處理器——推出**正式版**、周邊套件成熟後，將其替換過去。替換只會在 Sätteri 已是
+  正式版**且**現有管線的每一項功能都能在其上
   確實複現、切換過去不造成任何退化時才進行——在那之前，維持 Remark。
 
 ## 授權
