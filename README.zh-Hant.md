@@ -141,6 +141,14 @@ wrangler.jsonc        # Cloudflare Workers Static Assets 部署設定
 字串即可。本主題沒有逐篇語言切換器；要在站上組織多種語言的內容，可把標籤與系列
 當作分面（facet）使用。（有一篇 demo 文會走過這個做法。）
 
+## 藍圖（Roadmap）
+
+- **Remark → Sätteri。** Markdown 管線目前跑在 Remark 上（透過
+  `astro.config.mjs` 的 `processor: unified({...})`）。計畫是待 **Sätteri** 推出
+  **正式版**、周邊套件成熟後，將其替換過去。替換只會在 Sätteri 已是正式版**且**
+  現有管線的每一項功能都能在其上
+  確實複現、切換過去不造成任何退化時才進行——在那之前，維持 Remark。
+
 ## 授權
 
 - **程式碼** — MIT（`LICENSE`）。

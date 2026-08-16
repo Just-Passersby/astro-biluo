@@ -157,6 +157,15 @@ To run an English-first site, change `defaultLang` / `siteLocale` in
 switcher; to organize content in more than one language, use tags and series as
 facets. (A demo post walks through this.)
 
+## Roadmap
+
+- **Remark → Sätteri.** The Markdown pipeline currently runs on Remark (via
+  `processor: unified({...})` in `astro.config.mjs`). The plan is to switch it to
+  **Sätteri** once that project reaches a **stable release** and its surrounding
+  packages mature. The switch will only
+  land once Sätteri is stable *and* every feature the current pipeline provides
+  is verifiably reproduced on it, with no regression — until then, Remark stays.
+
 ## License
 
 - **Code** — MIT (`LICENSE`).
