@@ -46,6 +46,23 @@ Callout titles (Note / Tip / Important / Warning / Caution) come from
 `remark-github-blockquote-alert` and are **already English** by default. No
 change needed.
 
+To remove the labels at the front for alerts, you can comment out
+
+the code in
+
+`src/layouts/BlogPost.astro`
+
+```css
+:global(.markdown-alert-title::before) { font-size: 1.15em; letter-spacing: normal; }
+:global(.markdown-alert-note .markdown-alert-title::before)      { content: '注意'; }
+:global(.markdown-alert-note .markdown-alert-title::before)      { content: '注意'; }
+:global(.markdown-alert-tip .markdown-alert-title::before)       { content: '提示'; }
+:global(.markdown-alert-important .markdown-alert-title::before) { content: '重要'; }
+:global(.markdown-alert-warning .markdown-alert-title::before)   { content: '警告'; }
+:global(.markdown-alert-caution .markdown-alert-title::before)   { content: '危險'; }
+:global(.markdown-alert-caution .markdown-alert-title::before)   { content: '危險'; }
+```
+
 ## 4. Fonts (optional, but recommended for English-only)
 
 The CJK body font (Chiron GoRound TC) is only worth its bytes if you render
