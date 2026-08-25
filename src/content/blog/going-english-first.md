@@ -40,11 +40,24 @@ remarkRehype: {
 }
 ```
 
-## 3. Callouts — nothing to do
+## 3. Callouts — one optional tweak
 
-Callout titles (Note / Tip / Important / Warning / Caution) come from
-`remark-github-blockquote-alert` and are **already English** by default. No
-change needed.
+Out of the box, callout titles render as Chinese + English (e.g. "注意 Note").
+The English label and icon come from `remark-github-blockquote-alert`; the
+Chinese prefix is added by the theme via `::before`. For an English-only site,
+comment out (or delete) the five Chinese overrides in
+`src/layouts/BlogPost.astro`, which leaves the plugin's native English labels:
+
+```css
+:global(.markdown-alert-note .markdown-alert-title::before)      { content: '注意'; }
+:global(.markdown-alert-tip .markdown-alert-title::before)       { content: '提示'; }
+:global(.markdown-alert-important .markdown-alert-title::before) { content: '重要'; }
+:global(.markdown-alert-warning .markdown-alert-title::before)   { content: '警告'; }
+:global(.markdown-alert-caution .markdown-alert-title::before)   { content: '危險'; }
+```
+
+Leave the `font-size` / `letter-spacing` rule on `.markdown-alert-title::before`
+in place — it's generic styling, not a label.
 
 ## 4. Fonts (optional, but recommended for English-only)
 
