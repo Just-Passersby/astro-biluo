@@ -157,4 +157,6 @@ wrangler.jsonc        # Cloudflare Workers Static Assets 部署設定
 - **字型** — SIL Open Font License 1.1。各字型在 `public/fonts/` 下隨附自己的
   `OFL.txt`；出處與版權列於 `NOTICE`。
 - **內容** — 屬於你。你在 `src/content/` 與 `src/assets/` 下新增的內容不在主題的
-  MIT 授權範圍內。頁尾會渲染可設定的內容授權（預設 CC BY-NC-ND 4.0）。
+  MIT 授權範圍內。頁尾會渲染可設定的內容授權（預設 **保留所有權利 / All rights
+  reserved**）。要改用 CC 之類的授權，設 `src/consts.ts` 的 `CONTENT_LICENSE`，
+  並填 `src/i18n/ui.ts` 的 `license.*` 三個值（該處已附一組 CC BY-NC-ND 範例註解）。

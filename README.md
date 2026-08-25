@@ -175,4 +175,7 @@ facets. (A demo post walks through this.)
   `public/fonts/`; sources and copyright are listed in `NOTICE`.
 - **Content** — yours. Anything you add under `src/content/` and `src/assets/`
   is not covered by the theme's MIT license. The footer renders a configurable
-  content license (default CC BY-NC-ND 4.0).
+  content license (default **All rights reserved**). To switch to a Creative
+  Commons or other license, set `CONTENT_LICENSE` in `src/consts.ts` and fill in
+  the `license.*` values in `src/i18n/ui.ts` (a CC BY-NC-ND example is included
+  there as a comment).
