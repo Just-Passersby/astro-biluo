@@ -70,6 +70,13 @@ To use a different Traditional/Simplified Chinese font:
 4. Update `public/_headers` if you renamed the font folder (it long-caches
    `/fonts/*`), and refresh the `NOTICE` / `OFL.txt` licensing entries.
 
+> **Simplified Chinese sites.** The theme ships as `zh-Hant` and its bundled
+> font, Chiron GoRound TC, is a Traditional Chinese face (subset-sliced). For a
+> Simplified Chinese site, follow the same swap above and replace it with an SC
+> font — e.g. **Source Han Sans SC / Noto Sans SC** (both OFL) — so glyph forms
+> match SC conventions and no simplified-only characters fall through to a
+> system fallback. There's no separate SC build; it's the font-swap path.
+
 ### Dropping Chinese entirely (English-first sites)
 
 If you're running an English-only site, you don't need Chiron at all. The
