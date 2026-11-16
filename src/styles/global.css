@@ -37,7 +37,17 @@
 	--header-bg: rgba(197, 237, 255, 0.35);
 	--header-border: rgba(255, 255, 255, 0.45);
 
+	/* 毛玻璃模糊。用到此 token 處須同時寫 backdrop-filter 與 -webkit-backdrop-filter 兩行
+	   （見 Header.astro）：Chromium 系認標準版、Safari ≤17 只認 -webkit- 版。CSS 壓縮用
+	   esbuild（astro.config）會原樣保留雙前綴；切勿改回 lightningcss（會去重成只剩 -webkit-）。 */
 	--header-backdrop: blur(16px) saturate(180%) brightness(1.08);
+
+	/* ── Liquid Glass 質感（靜態，純 CSS、不重跑 backdrop-filter）──
+	   highlight=頂緣鏡面亮線；sheen=由上而下的玻璃反光；shadow=浮起層次。*/
+	--header-highlight: rgba(255, 255, 255, 0.7);
+	--header-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0) 100%);
+	--header-shadow: 0 1px 1px rgba(var(--black), 4%), 0 6px 20px rgba(var(--gray), 16%);
+	--glass-flow-color: rgba(255, 255, 255, 0.58);  /* 指標流光：跟隨游標的柔光（中性白）*/
 
 	/* ── Callout / Admonition ──
 	   -c = 邊框/圖示色（裝飾，並當底色 tint 來源）；-fg = 標題文字色（已量化 WCAG）。
@@ -80,6 +90,12 @@
 	--header-bg: rgba(13, 27, 42, 0.45);
 	--header-border: rgba(255, 255, 255, 0.08);
 	--header-backdrop: blur(12px) brightness(0.9) saturate(150%);
+
+	/* Liquid Glass 質感（暗色：鏡面與反光都更收斂，避免亮邊喧賓奪主）*/
+	--header-highlight: rgba(255, 255, 255, 0.14);
+	--header-sheen: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0) 100%);
+	--header-shadow: 0 1px 1px rgba(0, 0, 0, 25%), 0 6px 22px rgba(0, 0, 0, 33%);
+	--glass-flow-color: rgba(255, 255, 255, 0.18);  /* 暗色流光更收斂 */
 
 	/* ── Callout（暗底 #1e3a5f，tint α13%，標題文字皆 ≥4.88:1）── */
 	--callout-tint: 13%;
@@ -297,6 +313,16 @@ code, pre, kbd {
 }
 @keyframes theme-icon-in {
 	from { opacity: 0; transform: rotate(120deg) scale(0.4); }
+}
+
+/* 主題切換期間把指標流光乾淨隱藏。VT 動畫那 0.45s 畫面是靜態快照、無法依游標即時渲染流光，
+   若放著會「凍結在點擊位置、結束再重定位」或（原始 will-change 版）直接閃一下消失。
+   這裡趁拍舊快照前就瞬間 opacity:0（transition:none，不讓快照拍到淡出中途），整段切換全程不顯示；
+   結束移除 .theme-switching 後，.glass-flow 恢復原本 0.3s 過渡，游標若還在 Header 就在「當前
+   游標位置」平滑淡入、繼續跟隨。 */
+:root.theme-switching .glass-flow {
+	opacity: 0 !important;
+	transition: none !important;
 }
 
 .sr-only {

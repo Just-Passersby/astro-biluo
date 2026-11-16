@@ -217,6 +217,8 @@ const jsonLd = [
 		border-radius: 14px 14px 0 0;
 		border-top: 1px solid var(--header-border);
 		background: linear-gradient(to bottom, var(--pinned-plate-fade) 0, var(--bg) 40px);
+		/* 標準版 + -webkit- 版都要寫（Chromium 認標準、Safari ≤17 認 -webkit-）；
+		   esbuild 壓縮原樣保留，詳見 Header.astro 註解。 */
 		backdrop-filter: blur(12px) saturate(140%);
 		-webkit-backdrop-filter: blur(12px) saturate(140%);
 	}
