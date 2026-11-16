@@ -7,6 +7,7 @@ const t = useTranslations();
 ---
 
 <header transition:persist transition:animate="none">
+	<span class="glass-flow" aria-hidden="true"></span>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links" id="nav-menu">
@@ -44,14 +45,23 @@ const t = useTranslations();
 <style>
 	header {
 		margin: 0;
-    	padding: 0 1em;
-    	background: var(--header-bg);
-    	backdrop-filter: var(--header-backdrop);
-    	border-bottom: 1px solid var(--header-border);
-    	box-shadow: 0 2px 8px rgba(var(--black), 5%);
-    	position: sticky;
-    	top: 0;
-    	z-index: 100;
+		padding: 0 1em;
+		background-color: var(--header-bg);
+		background-image: var(--header-sheen);
+		/* backdrop-filter 需同時寫標準版與 -webkit- 版：Chromium 系（如 Helium）認標準版、
+		   Safari ≤17 只認 -webkit- 版。CSS 壓縮用 esbuild（astro.config）會原樣保留雙前綴；
+		   ⚠️ 勿改用 lightningcss——它會把這兩條去重成只剩 -webkit-，害 Chromium 系失效。
+		   深淺值由 --header-backdrop token 在 :root / :root.dark 自動切換。 */
+		backdrop-filter: var(--header-backdrop);
+		-webkit-backdrop-filter: var(--header-backdrop);
+		border-bottom: 1px solid var(--header-border);
+		/* inset 頂緣鏡面亮線 + 浮起層次陰影（皆便宜的合成層，不觸發 backdrop-filter 重繪）*/
+		box-shadow:
+			inset 0 1px 0 var(--header-highlight),
+			var(--header-shadow);
+		position: sticky;
+		top: 0;
+		z-index: 100;
 	}
 	h2 {
 		margin: 0;
@@ -67,19 +77,66 @@ const t = useTranslations();
 	h2 a:hover {
 		color: var(--accent);
 	}
+	/* 三欄 grid：1fr | auto | 1fr。中欄（導航）恆置於 header 正中，不受左右（logo／圖示）
+	   不等寬影響（flex space-between 下中段會被擠偏）；左右欄各 1fr 對稱，logo 靠左、圖示靠右。
+	   手機版 .internal-links 收成絕對定位下拉面板、脫離 grid，故在 max-width:720px 把 nav 改回 flex。 */
 	nav {
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
 		align-items: center;
-		justify-content: space-between;
 		position: relative;
+		z-index: 1;
+	}
+	.internal-links {
+		justify-self: center;
+	}
+	.social-links {
+		justify-self: end;
+	}
+	/* 指標流光（transform 版）：跟隨游標的柔光，像光掃過玻璃（僅桌機有指標時啟用，見 <script>）。
+	   外層負責定位與裁切成 bar 形狀；inset:0 的絕對定位貼齊 header 的 padding box（已含左右 1em
+	   padding），光域即覆蓋整條 header。⚠️ 勿改成 inset:0 -1em——header 寬 100vw、只黏垂直的 sticky，
+	   往外凸 1em 會讓頁面可水平捲動、最右露出 header 背景外的空白（2026-10 實證）。
+	   座標以本層自己的 getBoundingClientRect 為基準（見 <script>），故與 inset 無關、永遠對齊游標。
+	   疊在模糊之上、nav 內容之下。 */
+	.glass-flow {
+		--flow-r: 215px;  /* 光斑半徑，調大小改這裡 */
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+	/* 內層光斑「只畫一次」，用 transform 平移跟隨游標 → 合成器層級操作、不重繪、碰不到 backdrop-filter。
+	   扣掉半徑讓光斑中心對準游標（--mx/--my 由 <script> 寫入，單位為 px）。 */
+	.glass-flow::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: calc(var(--flow-r) * 2);
+		height: calc(var(--flow-r) * 2);
+		background: radial-gradient(circle closest-side, var(--glass-flow-color), transparent 72%);
+		/* 不用 will-change：這層靠 rAF 連續更新 transform 跟游標，移動時瀏覽器會自動合成，
+		   不需預先提升為獨立合成層（省掉較輕量，也讓它在一般情況能被正常畫進快照）。
+		   主題切換期間的隱藏交給 global.css 的 :root.theme-switching .glass-flow 處理。 */
+		transform: translate(calc(var(--mx, 0px) - var(--flow-r)), calc(var(--my, 0px) - var(--flow-r)));
+	}
+	.glass-flow.active {
+		opacity: 1;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.glass-flow { display: none; }
 	}
 	.internal-links {
 		position: relative;
 	}
 	.internal-links a {
 		padding: 1em 0.5em;
-    	color: rgb(var(--black));
-    	text-decoration: none;
+		color: rgb(var(--black));
+		text-decoration: none;
 		transition: color 0.18s ease;
 	}
 	.internal-links a:hover {
@@ -112,8 +169,8 @@ const t = useTranslations();
 		transition: opacity 0.2s;
 	}
 	.social-links a:hover {
-    opacity: 0.7;
-}
+		opacity: 0.7;
+	}
 
 	/* ── 漢堡鈕（只在手機顯示）── */
 	.menu-toggle {
@@ -174,6 +231,12 @@ const t = useTranslations();
 
 	@media (max-width: 720px) {
 		/* 手機：nav 連結收進漢堡下拉面板；搜索／主題維持外露 */
+		/* .internal-links 轉絕對定位脫離佈局，桌機的三欄 grid 會只剩 logo／圖示兩項而錯位，
+		   故改回 flex space-between：logo 靠左、圖示靠右。 */
+		nav {
+			display: flex;
+			justify-content: space-between;
+		}
 		.menu-toggle {
 			display: flex;
 		}
@@ -526,6 +589,38 @@ const t = useTranslations();
 	// Header persists across navigations — bind once, listeners survive page swaps
 	document.getElementById('search-btn')?.addEventListener('click', openSearch);
 	document.getElementById('search-backdrop')?.addEventListener('click', closeSearch);
+
+	// ── Liquid Glass 指標流光 ──
+	// Header 持久化（transition:persist）→ 元素與聽眾綁一次即可跨頁存活。
+	// 僅在「有精細指標且可 hover」（桌機）且未要求減少動態時啟用；
+	// 手機（無 hover）與 reduce-motion 完全不綁 → 執行期零成本。
+	const glassHeader = document.querySelector<HTMLElement>('header');
+	const glassFlow = glassHeader?.querySelector<HTMLElement>('.glass-flow') ?? null;
+	const canFlow =
+		window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+		!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	if (glassHeader && glassFlow && canFlow) {
+		let flowRaf = 0;
+		let fx = 0;
+		let fy = 0;
+		const paintFlow = () => {
+			flowRaf = 0;
+			// 以流光層自己的 box 為基準（inset:0 貼齊 header padding box），座標相對自身 rect 永遠對齊游標
+			const r = glassFlow.getBoundingClientRect();
+			glassFlow.style.setProperty('--mx', `${fx - r.left}px`);
+			glassFlow.style.setProperty('--my', `${fy - r.top}px`);
+		};
+		glassHeader.addEventListener('pointerenter', () => glassFlow.classList.add('active'));
+		glassHeader.addEventListener('pointerleave', () => {
+			glassFlow.classList.remove('active');
+			if (flowRaf) { cancelAnimationFrame(flowRaf); flowRaf = 0; }
+		});
+		glassHeader.addEventListener('pointermove', (e) => {
+			fx = e.clientX;
+			fy = e.clientY;
+			if (!flowRaf) flowRaf = requestAnimationFrame(paintFlow);
+		});
+	}
 
 	// ── Mobile nav menu（漢堡）──
 	// Header 持久化：聽眾綁一次即可跨頁存活（同 search-btn）

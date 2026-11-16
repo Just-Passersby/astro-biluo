@@ -90,6 +90,15 @@ export default defineConfig({
 		// （主要是每頁都載入的 Header CSS）。靜態站經 CDN 快取，代價極小。
 		inlineStylesheets: 'always',
 	},
+	vite: {
+		build: {
+			// CSS 壓縮用 esbuild（Vite 舊預設）而非 lightningcss。
+			// lightningcss 會把「標準 + -webkit- 前綴且值相同」的兩條宣告去重、只留 -webkit-，
+			// 導致需要標準版的 Chromium 系（Helium 等）backdrop-filter 毛玻璃失效（2026-10 實證）。
+			// esbuild 原樣保留雙前綴，故 backdrop-filter 一律標準 + -webkit- 兩行並存。
+			cssMinify: 'esbuild',
+		},
+	},
 	redirects: {
 		// 舊路徑 → 新路徑的轉址。例：
 		// '/old-path': '/new-path',
